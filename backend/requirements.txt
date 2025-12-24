@@ -4,7 +4,7 @@ pydantic==2.9.2
 python-dotenv==1.0.1
 
 # Database
-psycopg[binary]==3.2.1
+psycopg[binary]
 pgvector==0.3.2
 
 
