@@ -8,9 +8,10 @@ from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from app import db
-from app.embeddings import embed_text
-from app.pdf_processor import process_pdf_for_rag
+from backend.app import db
+from backend.app.embeddings import embed_text
+from backend.app.pdf_processor import process_pdf_for_rag
+
 
 
 # ----------------------------
