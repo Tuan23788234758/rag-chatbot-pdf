@@ -15,29 +15,42 @@ _conn: psycopg.Connection | None = None
 
 def init_db(retries: int = 10, delay: int = 3) -> None:
     """
-    Connect to Postgres using env vars and ensure pgvector is enabled.
-    Retries while the DB container is starting up.
+    Connect to Postgres using DATABASE_URL (cloud) or fallback env vars (local).
     """
     load_dotenv()
     global _conn
     last_err: Exception | None = None
 
+    database_url = os.getenv("DATABASE_URL")
+
     for attempt in range(1, retries + 1):
         try:
-            _conn = psycopg.connect(
-                host=os.getenv("POSTGRES_HOST", "localhost"),
-                port=os.getenv("POSTGRES_PORT", "5432"),
-                dbname=os.getenv("POSTGRES_DB", "ragdb"),
-                user=os.getenv("POSTGRES_USER", "rag"),
-                password=os.getenv("POSTGRES_PASSWORD", "ragpass"),
-                autocommit=True,
-                row_factory=dict_row,
-            )
-            register_vector(_conn)  # ✅ makes psycopg handle `vector` type
+            if database_url:
+                # ✅ CLOUD / RENDER
+                _conn = psycopg.connect(
+                    database_url,
+                    autocommit=True,
+                    row_factory=dict_row,
+                )
+            else:
+                # ✅ LOCAL DEV FALLBACK
+                _conn = psycopg.connect(
+                    host=os.getenv("POSTGRES_HOST", "localhost"),
+                    port=os.getenv("POSTGRES_PORT", "5432"),
+                    dbname=os.getenv("POSTGRES_DB", "ragdb"),
+                    user=os.getenv("POSTGRES_USER", "rag"),
+                    password=os.getenv("POSTGRES_PASSWORD", "ragpass"),
+                    autocommit=True,
+                    row_factory=dict_row,
+                )
+
+            register_vector(_conn)
             with _conn.cursor() as cur:
                 cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
+
             print("✅ Connected to Postgres and pgvector is ready.")
             return
+
         except Exception as e:
             last_err = e
             print(f"DB connection failed ({e}); retrying in {delay}s... [{attempt}/{retries}]")
