@@ -5,7 +5,7 @@ function Header({ onNewChat, onUploadPDF }) {
     <header className="topbar">
       <div className="brand">
         RAG Chatbot 
-        <span className="author">by JFRChan</span>
+        <span className="author">by Tuna</span>
       </div>
       <div className="actions">
         <button 
