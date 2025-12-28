@@ -1,4 +1,4 @@
-# RAG Chatbot with PDF Upload
+# RAG Chatbot 
 
 A Retrieval-Augmented Generation (RAG) chatbot that allows users to upload PDF documents and ask questions about their content. Built with FastAPI, PostgreSQL + pgvector, OpenAI, and a modern React frontend.
 
