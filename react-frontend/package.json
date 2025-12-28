@@ -25,6 +25,6 @@
     "webpack-dev-server": "^4.15.0"
   },
   "keywords": ["react", "chatbot", "rag"],
-  "author": "JFRChan",
+  "author": "Tuna",
   "license": "MIT"
 }
